@@ -1,22 +1,245 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="h-100" lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>JS Activity 02</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
       integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"
       crossorigin="anonymous"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      /* body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      } */
+
+      .container {
+        transform-style: preserve-3d;
+      }
+
+      .container .box {
+        position: relative;
+        width: 300px;
+        height: 300px;
+        margin: 20px;
+        transform-style: preserve-3d;
+        perspective: 1000px;
+        cursor: pointer;
+      }
+
+      .container .box .body {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: 0.9s ease;
+      }
+
+      .container .box .body .imgContainer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        background-color: #333333;
+      }
+
+      .container .box .body .imgContainer img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .container .box .body .content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #333;
+        backface-visibility: hidden;
+        transform-style: preserve-3d;
+        transform: rotateY(180deg);
+      }
+
+      .container .box:hover .body {
+        transform: rotateY(180deg);
+      }
+
+      .container .box .body .content div {
+        transform-style: preserve-3d;
+        padding: 20px;
+        background: white;
+        transform: translateZ(100px);
+      }
+
+      .container .box .body .content div h3 {
+        letter-spacing: 1px;
+      }
+
+      .tag {
+        padding: 4px 8px;
+        border: 1px solid #e5eaed;
+
+        border-radius: 50px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #788697;
+      }
+
+      .spinner {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -20px;
+        margin-left: -25px;
+        height: 5em;
+        width: 5em;
+      }
+
+      .loading {
+        display: none;
+        position: revert;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ededed90;
+      }
+    </style>
   </head>
-  <body>
-    <h1>Hello, world!</h1>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-      crossorigin="anonymous"
-    ></script>
+  <body class="d-flex flex-column h-100">
+    <!-- HERO START-->
+    <div class="container">
+      <div class="px-4 py-5 my-5 text-center">
+        <iconify-icon
+          style="font-size: 8em"
+          icon="tabler:brand-funimation"
+        ></iconify-icon>
+        <h1 class="display-5 fw-bold">Punchlines that Pack a Punch</h1>
+        <div class="col-lg-6 mx-auto">
+          <p class="lead mb-4">
+            Get ready to laugh with our easy to use joke generator. Spreading
+            joy, one joke at a time. Never run out of material with our endless
+            supply of puns and one-liners.
+          </p>
+          <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+            <button
+              type="button"
+              class="btn btn-primary btn-lg px-4 gap-3"
+              fdprocessedid="5q21vk"
+              onclick="generateJoke()"
+            >
+              Generate Joke
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- HERO END -->
+
+    <!-- CARD JOKES START -->
+    <div
+      id="itemList"
+      class="container d-flex align-items-center justify-content-center flex-wrap"
+    ></div>
+    <!-- CARD JOKES END -->
+
+    <!-- SPINNER STARTS HERE -->
+    <div class="d-flex justify-content-center loading" id="loadDiv">
+      <div class="spinner-border spinner" role="status" id="loadSpinner">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+    <!-- SPINNER ENDS HERE -->
+
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.2/dist/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <script>
+      const apiEndPoint = "https://official-joke-api.appspot.com/random_joke";
+      const itemListElement = document.getElementById("itemList");
+      var jokeData = [];
+      var elementStorage = ``;
+
+      function displayCards() {
+        elementStorage = ``;
+        for (let i = 0; i < jokeData.length; i++) {
+          console.log(i);
+          elementStorage += `
+          <div class="box">
+        <div class="body">
+          <div class="imgContainer">
+            <h3 style="padding: 1em; color: white">
+              ${jokeData[i].setup}
+            </h3>
+          </div>
+          <div
+            class="content d-flex flex-column align-items-center justify-content-center"
+          >
+            <div style="background-color: #b5ffe9; width: 100%">
+              <h3 class="fs-5 text-black">${jokeData[i].punchline}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+            `;
+          itemListElement.innerHTML = elementStorage;
+        }
+      }
+
+      async function generateJoke() {
+        showSpinner();
+        const response = await fetch(apiEndPoint);
+        console.log(response.status);
+        let data = await response.json();
+        jokeData.push(data);
+        if (response.status == 200) {
+          console.log(jokeData);
+          displayCards();
+        }
+        hideSpinner();
+      }
+
+      function showSpinner() {
+        document.getElementById("loadDiv").style.position = "fixed";
+        document.getElementById("loadSpinner").style.display = "block";
+      }
+      function hideSpinner() {
+        document.getElementById("loadDiv").style.position = "revert";
+        document.getElementById("loadSpinner").style.display = "none";
+      }
+    </script>
   </body>
 </html>
